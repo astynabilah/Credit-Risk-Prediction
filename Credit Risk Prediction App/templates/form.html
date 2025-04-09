@@ -1,0 +1,73 @@
+
+
+{% extends 'main.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Risky Loan Predictor</h2>
+    <form method="POST">
+        {% set descriptions = {
+            'recoveries': "Indicates if a payment plan has been put in place for the loan.",
+            'total_rec_prncp': "Principal received to date.",
+            'collection_recovery_fee': "Post charge off collection fee.",
+            'last_pymnt_month': "Month of the last payment received.",
+            'last_pymnt_amnt': "Last total payment amount received.",
+            'last_pymnt_year': "Year of the last payment received.",
+            'out_prncp': "Remaining outstanding principal for total amount funded.",
+            'home_ownership': "Home ownership status: RENT, OWN, MORTGAGE, OTHER.",
+            'grade': "Loan grade assigned by LendingClub.",
+            'initial_list_status': "Initial listing status: Whole, Fractional.",
+            'verification_status': "Indicates if income was verified by LC.",
+            'int_rate': "Interest rate of the loan.",
+            'sub_grade': "Loan subgrade assigned by LendingClub.",
+            'emp_length': "Employment length in years (0 to 10+).",
+            'term': "The number of monthly payments (e.g., 36 or 60).",
+            'total_rec_int': "Interest received to date.",
+            'installment': "Monthly payment owed by the borrower.",
+            'last_credit_pull_year': "Year of the most recent credit pull.",
+            'last_credit_pull_month': "Month of the most recent credit pull.",
+            'total_rec_late_fee': "Late fees received to date.",
+            'issue_d_year': "Year when the loan was funded.",
+            'inq_last_6mths': "Number of credit inquiries in past 6 months.",
+            'earliest_cr_line_month': "Month of borrower's earliest credit line.",
+            'issue_d_month': "Month the loan was issued.",
+            'annual_inc': "Self-reported annual income.",
+            'addr_state': "US state provided by borrower in application.",
+            'purpose': "Category for the loan request (e.g., debt_consolidation).",
+            'earliest_cr_line_year': "Year of borrower's earliest credit line.",
+            'tot_cur_bal': "Total current balance of all accounts.",
+            'total_rev_hi_lim': "Total revolving high credit/limit.",
+            'open_acc': "Number of open credit lines.",
+            'pub_rec': "Number of derogatory public records.",
+            'emp_title': "Job title provided by borrower.",
+            'delinq_2yrs': "Number of 30+ days past-due incidents in last 2 years.",
+            'revol_util': "Revolving line utilization rate (% of credit used).",
+            'total_acc': "Total number of credit lines.",
+            'revol_bal': "Total credit revolving balance.",
+            'dti': "Debt-to-income ratio."
+        } %}
+        {% for col in [
+            'recoveries', 'total_rec_prncp', 'collection_recovery_fee',
+            'last_pymnt_month', 'last_pymnt_amnt', 'last_pymnt_year',
+            'out_prncp', 'home_ownership', 'grade', 'initial_list_status',
+            'verification_status', 'int_rate', 'sub_grade', 'emp_length',
+            'term', 'total_rec_int', 'installment', 'last_credit_pull_year',
+            'last_credit_pull_month', 'total_rec_late_fee', 'issue_d_year',
+            'inq_last_6mths', 'earliest_cr_line_month', 'issue_d_month',
+            'annual_inc', 'addr_state', 'purpose', 'earliest_cr_line_year',
+            'tot_cur_bal', 'total_rev_hi_lim', 'open_acc', 'pub_rec',
+            'emp_title', 'delinq_2yrs', 'revol_util', 'total_acc',
+            'revol_bal', 'dti'
+        ] %}
+            <div class="mb-4">
+                <label class="form-label fw-bold">{{ col.replace('_', ' ').title() }}</label>
+                <small class="form-text text-muted">{{ descriptions.get(col, "No description available.") }}</small>
+                <input type="text" class="form-control mt-1" name="{{ col }}">
+            </div>
+        {% endfor %}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Predict Risk</button>
+            <p class="mt-3">Prediction Result: <strong>{{ pred_text }}</strong></p>
+        </div>
+    </form>
+</div>
+{% endblock %}
