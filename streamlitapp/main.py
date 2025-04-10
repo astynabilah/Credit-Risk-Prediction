@@ -78,6 +78,11 @@ class PredictRiskyLoan:
 # ... semua import dan class PredictRiskyLoan tetap sama ...
 
 # --- Streamlit App ---
+st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
+st.title("Loan Risk Prediction Form")
+st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
+
+# Add minimal styling
 st.markdown("""
 <style>
     .form-text {
@@ -94,17 +99,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
-st.title("Loan Risk Prediction Form")
-st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
-
-# Add minimal styling
-st.markdown("""
-<style>
-    .form-text { font-size: 0.85rem; color: #6c757d; margin-top: -5px; margin-bottom: 5px; display: block; }
-    input[type="text"] { margin-bottom: 20px; }
-</style>
-""", unsafe_allow_html=True)
 
 PR = PredictRiskyLoan()
 
