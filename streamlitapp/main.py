@@ -88,7 +88,7 @@ st.markdown("""
     .form-text {
         font-size: 0.85rem;
         color: #888;
-        margin-top: -10px;
+        margin-top: -8px;
         margin-bottom: 15px;
         display: block;
     }
@@ -96,10 +96,9 @@ st.markdown("""
         padding: 8px 10px;
         font-size: 0.95rem;
     }
-
-    /*Remove 'Press enter to submit' tooltip */
-    div[data-baseweb="input"] > div:after {
-        content: none !important;
+    /* HIDE placeholder note */
+    .stTextInput > div > div:has(span[aria-hidden="true"]) {
+        display: none;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -169,11 +168,11 @@ with st.form("prediction_form"):
     for col in selected_columns:
         label = col.replace("_", " ").title()
         desc = descriptions.get(col, "No description available.")
-        
+
         if dtype_map[col] == float:
-            form_input[col] = st.text_area(label, height=35)
+            form_input[col] = st.text_input(label, "")
         else:
-            form_input[col] = st.text_area(label, height=35).upper()
+            form_input[col] = st.text_input(label, "").upper()
 
         st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
@@ -199,3 +198,4 @@ with st.form("prediction_form"):
             st.success(f"Prediction Result: **{pred}**")
         except Exception as e:
             st.error(f"Prediction failed: {e}")
+
