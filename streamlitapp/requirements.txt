@@ -1,0 +1,6 @@
+pip
+streamlit
+xgboost
+pandas
+numpy
+joblib
