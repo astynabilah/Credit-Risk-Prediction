@@ -78,7 +78,7 @@ class PredictRiskyLoan:
 # === Streamlit App ===
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
 st.markdown("""
-<h2 style='text-align: center;'>Loan Risk Prediction Form</h2>
+<h1 style='text-align: center;'>Loan Risk Prediction Form</h1>
 
 <p style='text-align: center; font-size: 16px;'>
 This form is part of a project-based internship for the Data Scientist at ID/X Partners.<br>
@@ -87,10 +87,10 @@ Developed by <strong>Asty Nabilah 'Izzaturrahmah</strong>
 <a href="https://www.linkedin.com/in/asty-nabilah-izzaturrahmah/" target="_blank">Connect with me on Linkedin</a>
 </p>
 
-<hr style='margin-top: 10px; margin-bottom: 30px;'>s
+<hr style='margin-top: 10px; margin-bottom: 30px;'>
 
 <div style='font-size:15px;'>
-<b>Instructions:</b>
+<h2>Instructions:</h2>
 <ul>
   <li>Please fill in all relevant fields before submitting to ensure accurate predictions.</li>
   <li>Do not press <i>Enter</i> until all required fields have been filled in. Premature submission may lead to inaccurate results.</li>
