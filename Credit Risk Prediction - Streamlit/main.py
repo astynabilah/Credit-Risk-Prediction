@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import streamlit as st
+import sklearn
 from sklearn.preprocessing import RobustScaler
 
 class PredictRiskyLoan:
