@@ -75,7 +75,7 @@ class PredictRiskyLoan:
         prediction = self.model.predict(processed_data)[0]
         return "Risky Loan" if prediction == 0 else "Safe Loan"
 
-# --- Streamlit App ---
+# === Streamlit App ===
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
 st.title("Loan Risk Prediction Form")
 st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
@@ -94,114 +94,113 @@ st.markdown("""
         padding: 8px 10px;
         font-size: 0.95rem;
     }
-    .stTextInput > div > div:has(span[aria-hidden="true"]) {
-        display: none;
-    }
 </style>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('input').forEach(el => {
-        el.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-            }
-        });
-    });
-});
-</script>
 """, unsafe_allow_html=True)
 
-# Init Class
+# Load Model
 PR = PredictRiskyLoan()
 
-# Columns and Descriptions
-selected_columns = [
-    'recoveries', 'total_rec_prncp', 'collection_recovery_fee', 'last_pymnt_month', 'last_pymnt_amnt',
-    'last_pymnt_year', 'out_prncp', 'home_ownership', 'grade', 'initial_list_status',
-    'verification_status', 'int_rate', 'sub_grade', 'emp_length', 'term', 'total_rec_int',
-    'installment', 'last_credit_pull_year', 'last_credit_pull_month', 'total_rec_late_fee',
-    'issue_d_year', 'inq_last_6mths', 'earliest_cr_line_month', 'issue_d_month', 'annual_inc',
-    'addr_state', 'purpose', 'earliest_cr_line_year', 'tot_cur_bal', 'total_rev_hi_lim',
-    'open_acc', 'pub_rec', 'emp_title', 'delinq_2yrs', 'revol_util', 'total_acc', 'revol_bal', 'dti'
-]
-
-dtype_map = {col: float for col in selected_columns}
-for col in ['home_ownership', 'grade', 'initial_list_status', 'verification_status',
-            'sub_grade', 'emp_length', 'term', 'addr_state', 'purpose', 'emp_title']:
-    dtype_map[col] = str
-
+# Descriptions
 descriptions = {
-    'recoveries': "Indicates if a payment plan has been put in place for the loan.",
-    'total_rec_prncp': "Principal received to date.",
-    'collection_recovery_fee': "Post charge off collection fee.",
-    'last_pymnt_month': "Month of the last payment received.",
-    'last_pymnt_amnt': "Last total payment amount received.",
-    'last_pymnt_year': "Year of the last payment received.",
-    'out_prncp': "Remaining outstanding principal for total amount funded.",
-    'home_ownership': "Home ownership status: RENT, OWN, MORTGAGE, OTHER.",
-    'grade': "Loan grade assigned by LendingClub.",
-    'initial_list_status': "Initial listing status: Whole, Fractional.",
-    'verification_status': "Indicates if income was verified by LC.",
-    'int_rate': "Interest rate of the loan.",
-    'sub_grade': "Loan subgrade assigned by LendingClub.",
+    'emp_title': "Job title provided by borrower.",
     'emp_length': "Employment length in years (0 to 10+).",
-    'term': "The number of monthly payments (e.g., 36 or 60).",
-    'total_rec_int': "Interest received to date.",
-    'installment': "Monthly payment owed by the borrower.",
-    'last_credit_pull_year': "Year of the most recent credit pull.",
-    'last_credit_pull_month': "Month of the most recent credit pull.",
-    'total_rec_late_fee': "Late fees received to date.",
-    'issue_d_year': "Year when the loan was funded.",
-    'inq_last_6mths': "Number of credit inquiries in past 6 months.",
-    'earliest_cr_line_month': "Month of borrower's earliest credit line.",
-    'issue_d_month': "Month the loan was issued.",
     'annual_inc': "Self-reported annual income.",
     'addr_state': "US state provided by borrower in application.",
-    'purpose': "Category for the loan request (e.g., debt_consolidation).",
+    'inq_last_6mths': "Number of credit inquiries in past 6 months.",
     'earliest_cr_line_year': "Year of borrower's earliest credit line.",
-    'tot_cur_bal': "Total current balance of all accounts.",
-    'total_rev_hi_lim': "Total revolving high credit/limit.",
+    'earliest_cr_line_month': "Month of borrower's earliest credit line.",
     'open_acc': "Number of open credit lines.",
     'pub_rec': "Number of derogatory public records.",
-    'emp_title': "Job title provided by borrower.",
     'delinq_2yrs': "Number of 30+ days past-due incidents in last 2 years.",
-    'revol_util': "Revolving line utilization rate (% of credit used).",
     'total_acc': "Total number of credit lines.",
+    'revol_util': "Revolving line utilization rate (% of credit used).",
     'revol_bal': "Total credit revolving balance.",
-    'dti': "Debt-to-income ratio."
+    'tot_cur_bal': "Total current balance of all accounts.",
+    'total_rev_hi_lim': "Total revolving high credit/limit.",
+    'grade': "Loan grade assigned by LendingClub.",
+    'sub_grade': "Loan subgrade assigned by LendingClub.",
+    'term': "The number of monthly payments (e.g., 36 or 60).",
+    'home_ownership': "Home ownership status: RENT, OWN, MORTGAGE, OTHER.",
+    'purpose': "Category for the loan request (e.g., debt_consolidation).",
+    'int_rate': "Interest rate of the loan.",
+    'dti': "Debt-to-income ratio.",
+    'installment': "Monthly payment owed by the borrower.",
+    'issue_d_year': "Year when the loan was funded.",
+    'issue_d_month': "Month the loan was issued.",
+    'initial_list_status': "Initial listing status: Whole, Fractional.",
+    'verification_status': "Indicates if income was verified by LC.",
+    'last_pymnt_year': "Year of the last payment received.",
+    'last_pymnt_month': "Month of the last payment received.",
+    'last_pymnt_amnt': "Last total payment amount received.",
+    'recoveries': "Indicates if a payment plan has been put in place for the loan.",
+    'collection_recovery_fee': "Post charge off collection fee.",
+    'total_rec_prncp': "Principal received to date.",
+    'total_rec_int': "Interest received to date.",
+    'total_rec_late_fee': "Late fees received to date.",
+    'last_credit_pull_year': "Year of the most recent credit pull.",
+    'last_credit_pull_month': "Month of the most recent credit pull.",
+    'out_prncp': "Remaining outstanding principal for total amount funded."
 }
+
+# Section structure
+sections = {
+    "1. Borrower Information": [
+        'emp_title', 'emp_length', 'annual_inc', 'addr_state'
+    ],
+    "2. Credit History": [
+        'inq_last_6mths', 'earliest_cr_line_year', 'earliest_cr_line_month',
+        'open_acc', 'pub_rec', 'delinq_2yrs', 'total_acc',
+        'revol_util', 'revol_bal', 'tot_cur_bal', 'total_rev_hi_lim'
+    ],
+    "3. Loan Details": [
+        'grade', 'sub_grade', 'term', 'home_ownership', 'purpose',
+        'int_rate', 'dti', 'installment', 'issue_d_year', 'issue_d_month',
+        'initial_list_status', 'verification_status'
+    ],
+    "4. Repayment": [
+        'last_pymnt_year', 'last_pymnt_month', 'last_pymnt_amnt',
+        'recoveries', 'collection_recovery_fee', 'total_rec_prncp',
+        'total_rec_int', 'total_rec_late_fee', 'last_credit_pull_year',
+        'last_credit_pull_month', 'out_prncp'
+    ]
+}
+
+dtype_map = {key: str for sec in sections.values() for key in sec}
+for k in descriptions.keys():
+    if k not in dtype_map:
+        dtype_map[k] = float
 
 form_input = {}
 
 with st.form("prediction_form"):
-    for col in selected_columns:
-        label = col.replace('_', ' ').title()
-        desc = descriptions.get(col, "No description available.")
-        if dtype_map[col] == float:
-            form_input[col] = st.text_area(f"{col.replace('_', ' ').title()}", "", height=70)
-        else:
-            form_input[col] = st.text_area(f"{col.replace('_', ' ').title()}", "", height=70).upper()
-        st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
+    for section_name, columns in sections.items():
+        st.subheader(section_name)
+        st.markdown("---")
+        for col in columns:
+            label = col.replace('_', ' ').title()
+            if dtype_map[col] == float:
+                form_input[col] = st.text_input(f"{label}", "")
+            else:
+                form_input[col] = st.text_input(f"{label}", "").upper()
+            desc = descriptions.get(col, "No description available.")
+            st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
 
-if submitted:
-    try:
-        processed_input = {}
-        for col in selected_columns:
-            val = form_input[col].strip()
-            if val == "":
-                processed_input[col] = PR.imputation_values.get(col, np.nan)
-            else:
-                try:
-                    if dtype_map[col] == float:
-                        processed_input[col] = float(val)
-                    else:
-                        processed_input[col] = val.upper()
-                except Exception:
+    if submitted:
+        try:
+            processed_input = {}
+            for col in dtype_map:
+                val = form_input[col].strip()
+                if val == "":
                     processed_input[col] = PR.imputation_values.get(col, np.nan)
+                else:
+                    try:
+                        processed_input[col] = float(val) if dtype_map[col] == float else val.upper()
+                    except Exception:
+                        processed_input[col] = PR.imputation_values.get(col, np.nan)
 
-        pred = PR.predict(processed_input)
-        st.success(f"Prediction Result: **{pred}**")
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
+            pred = PR.predict(processed_input)
+            st.success(f"Prediction Result: **{pred}**")
+        except Exception as e:
+            st.error(f"Prediction failed: {e}")
