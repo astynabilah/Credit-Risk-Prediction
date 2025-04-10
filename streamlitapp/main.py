@@ -98,15 +98,13 @@ st.markdown("""
         display: none;
     }
 </style>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('input').forEach(el => {
-        el.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-            }
-        });
-    });
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        e.preventDefault();
+        return false;
+    }
 });
 </script>
 """, unsafe_allow_html=True)
