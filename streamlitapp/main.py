@@ -75,6 +75,8 @@ class PredictRiskyLoan:
         prediction = self.model.predict(processed_data)[0]
         return "Risky Loan" if prediction == 0 else "Safe Loan"
 
+# ... semua import dan class PredictRiskyLoan tetap sama ...
+
 # --- Streamlit App ---
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
 st.title("💰 Loan Risk Prediction Form")
@@ -83,7 +85,7 @@ st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
 # Add minimal styling
 st.markdown("""
 <style>
-    .form-text { font-size: 0.85rem; color: #6c757d; margin-top: -10px; margin-bottom: 10px; }
+    .form-text { font-size: 0.85rem; color: #6c757d; margin-top: -5px; margin-bottom: 5px; display: block; }
     input[type="text"] { margin-bottom: 20px; }
 </style>
 """, unsafe_allow_html=True)
@@ -156,6 +158,7 @@ with st.form("prediction_form"):
             form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "")
         else:
             form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "").upper()
+        st.write("")  # Spacer biar nggak nempel input di bawahnya
 
     submitted = st.form_submit_button("Predict")
 
