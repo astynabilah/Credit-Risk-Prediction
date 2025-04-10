@@ -96,6 +96,11 @@ st.markdown("""
         padding: 8px 10px;
         font-size: 0.95rem;
     }
+
+    /*Remove 'Press enter to submit' tooltip */
+    div[data-baseweb="input"] > div:after {
+        content: none !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
