@@ -234,52 +234,45 @@ categorical_options = {
 }
 
 dtype_map = {
-    'recoveries': float,
-    'total_rec_prncp': float,
-    'collection_recovery_fee': float,
-    'last_pymnt_month': float,
-    'last_pymnt_amnt': float,
-    'last_pymnt_year': float,
-    'total_pymnt': float,
-    'total_pymnt_inv': float,
-    'out_prncp': float,
-    'out_prncp_inv': float,
-    'home_ownership': str,
-    'grade': str,
-    'initial_list_status': str,
-    'verification_status': str,
-    'int_rate': float,
-    'sub_grade': str,
+    'emp_title': str,
     'emp_length': str,
-    'term': str,
-    'total_rec_int': float,
-    'installment': float,
-    'last_credit_pull_year': float,
-    'last_credit_pull_month': float,
-    'total_rec_late_fee': float,
-    'issue_d_year': float,
-    'inq_last_6mths': float,
-    'loan_amnt': float,
-    'earliest_cr_line_month': float,
-    'issue_d_month': float,
-    'funded_amnt_inv': float,
     'annual_inc': float,
-    'funded_amnt': float,
     'addr_state': str,
-    'purpose': str,
+    'inq_last_6mths': float,
     'earliest_cr_line_year': float,
-    'tot_cur_bal': float,
-    'total_rev_hi_lim': float,
+    'earliest_cr_line_month': float,
     'open_acc': float,
     'pub_rec': float,
-    'emp_title': str,
     'delinq_2yrs': float,
-    'revol_util': float,
     'total_acc': float,
+    'revol_util': float,
     'revol_bal': float,
-    'dti': float
+    'tot_cur_bal': float,
+    'total_rev_hi_lim': float,
+    'grade': str,
+    'sub_grade': str,
+    'term': str,
+    'home_ownership': str,
+    'purpose': str,
+    'int_rate': float,
+    'dti': float,
+    'installment': float,
+    'issue_d_year': float,
+    'issue_d_month': float,
+    'initial_list_status': str,
+    'verification_status': str,
+    'last_pymnt_year': float,
+    'last_pymnt_month': float,
+    'last_pymnt_amnt': float,
+    'recoveries': float,
+    'collection_recovery_fee': float,
+    'total_rec_prncp': float,
+    'total_rec_int': float,
+    'total_rec_late_fee': float,
+    'last_credit_pull_year': float,
+    'last_credit_pull_month': float,
+    'out_prncp': float
 }
-
 
 form_input = {}
 
@@ -311,19 +304,27 @@ with st.form("prediction_form"):
 
 if submitted:
     try:
+        ordered_columns = [
+            'recoveries', 'total_rec_prncp', 'collection_recovery_fee', 'last_pymnt_month',
+            'last_pymnt_amnt', 'last_pymnt_year', 'out_prncp', 'home_ownership', 'grade',
+            'initial_list_status', 'verification_status', 'int_rate', 'sub_grade', 'emp_length',
+            'term', 'total_rec_int', 'installment', 'last_credit_pull_year', 'last_credit_pull_month',
+            'total_rec_late_fee', 'issue_d_year', 'inq_last_6mths', 'earliest_cr_line_month',
+            'issue_d_month', 'annual_inc', 'addr_state', 'purpose', 'earliest_cr_line_year',
+            'tot_cur_bal', 'total_rev_hi_lim', 'open_acc', 'pub_rec', 'emp_title', 'delinq_2yrs',
+            'revol_util', 'total_acc', 'revol_bal', 'dti'
+        ]
+
         processed_input = {}
-        for col in dtype_map:
-            val = form_input[col]
+        for col in ordered_columns:
+            val = form_input.get(col)
             if isinstance(val, str):
                 val = val.strip()
             if val == "":
                 processed_input[col] = PR.imputation_values.get(col, np.nan)
             else:
                 try:
-                    if dtype_map[col] == float:
-                        processed_input[col] = float(val)
-                    else:
-                        processed_input[col] = val
+                    processed_input[col] = float(val) if dtype_map[col] == float else val
                 except Exception:
                     processed_input[col] = PR.imputation_values.get(col, np.nan)
 
@@ -336,3 +337,4 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
