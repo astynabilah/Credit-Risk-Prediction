@@ -82,8 +82,8 @@ st.markdown("""
 
 <p style='text-align: center; font-size: 16px;'>
 This form is part of a project-based internship for the Data Scientist at ID/X Partners.<br>
-Developed by <strong>Asty Nabilah 'Izzaturrahmah</strong>
-<a href="https://github.com/astynabilah/Credit-Risk-Prediction" target="_blank">View on GitHub</a>
+Developed by <strong>Asty Nabilah 'Izzaturrahmah</strong><br/>
+<a href="https://github.com/astynabilah/Credit-Risk-Prediction" target="_blank">View on GitHub</a><br/>
 <a href="https://www.linkedin.com/in/asty-nabilah-izzaturrahmah/" target="_blank">Connect with me on Linkedin</a>
 </p>
 
@@ -186,12 +186,53 @@ sections = {
     ]
 }
 
-dtype_map = {key: str for sec in sections.values() for key in sec}
-for k in descriptions.keys():
-    if k not in dtype_map:
-        dtype_map[k] = float
-
 form_input = {}
+
+categorical_options = {
+    'term': ['36 months', '60 months'],
+    'grade': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'sub_grade': ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5',
+                  'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5',
+                  'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5',
+                  'G1', 'G2', 'G3', 'G4', 'G5'],
+    'emp_title': ['Teacher', 'Manager', 'Registered Nurse', 'RN', 'Supervisor', 'Sales',
+                  'Project Manager', 'Owner', 'Office Manager', 'manager', 'Driver',
+                  'General Manager', 'Director', 'teacher', 'Engineer', 'driver',
+                  'Vice President', 'President', 'owner', 'Administrative Assistant',
+                  'Operations Manager', 'Attorney', 'Accountant', 'supervisor',
+                  'Police Officer', 'sales', 'Sales Manager', 'Account Manager',
+                  'Store Manager', 'Executive Assistant', 'truck driver', 'US Army',
+                  'Analyst', 'Technician', 'Nurse', 'Software Engineer', 'Truck Driver',
+                  'Assistant Manager', 'Paralegal', 'Controller', 'Program Manager',
+                  'Branch Manager', 'registered nurse', 'Consultant', 'Account Executive',
+                  'Administrator', 'Bank of America', 'Business Analyst', 'Principal',
+                  'Mechanic', 'Professor', 'Server', 'Executive Director', 'IT Manager',
+                  'mechanic', 'Electrician', 'Registered nurse', 'CEO',
+                  'Customer Service', 'Associate', 'AT&T', 'Foreman',
+                  'Director of Operations', 'Secretary', 'Financial Analyst',
+                  'Kaiser Permanente', 'Legal Assistant', 'District Manager', 'LPN',
+                  'USAF', 'USPS', 'Superintendent', 'Pharmacist', 'Physician', 'UPS',
+                  'Walmart', 'Financial Advisor', 'technician', 'Operator', 'nurse',
+                  'Social Worker', 'Accounting Manager', 'Instructor', 'Clerk', 'Officer',
+                  'MANAGER', 'Bookkeeper', 'machine operator', 'clerk', 'Machinist',
+                  'Firefighter', 'Maintenance', 'CNA', 'Service Manager', 'Wells Fargo',
+                  'Bartender', 'server', 'Truck driver', 'Legal Secretary',
+                  'IT Specialist', 'Others'],
+    'emp_length': ['< 1 year', '1 year', '2 years', '3 years', '4 years', '5 years',
+                   '6 years', '7 years', '8 years', '9 years', '10+ years'],
+    'home_ownership': ['RENT', 'OWN', 'MORTGAGE', 'OTHER', 'NONE', 'ANY'],
+    'verification_status': ['Verified', 'Source Verified', 'Not Verified'],
+    'purpose': ['credit_card', 'car', 'small_business', 'other', 'wedding',
+                'debt_consolidation', 'home_improvement', 'major_purchase',
+                'medical', 'moving', 'vacation', 'house', 'renewable_energy',
+                'educational'],
+    'addr_state': ['AZ', 'GA', 'IL', 'CA', 'OR', 'NC', 'TX', 'VA', 'MO', 'CT',
+                   'UT', 'FL', 'NY', 'PA', 'MN', 'NJ', 'KY', 'OH', 'SC', 'RI',
+                   'LA', 'MA', 'WA', 'WI', 'AL', 'CO', 'KS', 'NV', 'AK', 'MD',
+                   'WV', 'VT', 'MI', 'DC', 'SD', 'NH', 'AR', 'NM', 'MT', 'HI',
+                   'WY', 'OK', 'DE', 'MS', 'TN', 'IA', 'NE', 'ID', 'IN', 'ME'],
+    'initial_list_status': ['f', 'w']
+}
 
 with st.form("prediction_form"):
     for section_name, columns in sections.items():
@@ -199,11 +240,19 @@ with st.form("prediction_form"):
         st.markdown("---")
         for col in columns:
             label = col.replace('_', ' ').title()
-            if dtype_map[col] == float:
-                form_input[col] = st.text_input(f"{label}", "")
-            else:
-                form_input[col] = st.text_input(f"{label}", "").upper()
             desc = descriptions.get(col, "No description available.")
+
+            if col in categorical_options:
+                form_input[col] = st.selectbox(
+                    f"{label}",
+                    options=categorical_options[col],
+                    key=col
+                )
+            elif dtype_map[col] == float:
+                form_input[col] = st.text_input(f"{label}", key=col)
+            else:
+                form_input[col] = st.text_input(f"{label}", "", key=col).strip().upper()
+
             st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
@@ -212,12 +261,12 @@ with st.form("prediction_form"):
         try:
             processed_input = {}
             for col in dtype_map:
-                val = form_input[col].strip()
+                val = form_input[col].strip() if isinstance(form_input[col], str) else form_input[col]
                 if val == "":
                     processed_input[col] = PR.imputation_values.get(col, np.nan)
                 else:
                     try:
-                        processed_input[col] = float(val) if dtype_map[col] == float else val.upper()
+                        processed_input[col] = float(val) if dtype_map[col] == float else val
                     except Exception:
                         processed_input[col] = PR.imputation_values.get(col, np.nan)
 
@@ -229,3 +278,4 @@ with st.form("prediction_form"):
                 st.success(f"Prediction Result: **{pred}**")
         except Exception as e:
             st.error(f"Prediction failed: {e}")
+
