@@ -166,36 +166,28 @@ form_input = {}
 
 with st.form("prediction_form"):
     for col in selected_columns:
-        label = col.replace("_", " ").title()
         desc = descriptions.get(col, "No description available.")
-
         if dtype_map[col] == float:
-            form_input[col] = st.text_input(label, "")
+            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "")
         else:
-            form_input[col] = st.text_input(label, "").upper()
-
+            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "").upper()
         st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
+    # Disable Enter key
+    st.markdown("""
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = window.parent.document.querySelector('form');
+        if (form) {
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+    </script>
+    """, unsafe_allow_html=True)
+
     submitted = st.form_submit_button("Predict")
-
-    if submitted:
-        try:
-            processed_input = {}
-            for col in selected_columns:
-                val = form_input[col].strip()
-                if val == "":
-                    processed_input[col] = PR.imputation_values.get(col, np.nan)
-                else:
-                    try:
-                        if dtype_map[col] == float:
-                            processed_input[col] = float(val)
-                        else:
-                            processed_input[col] = val.upper()
-                    except Exception:
-                        processed_input[col] = PR.imputation_values.get(col, np.nan)
-
-            pred = PR.predict(processed_input)
-            st.success(f"Prediction Result: **{pred}**")
-        except Exception as e:
-            st.error(f"Prediction failed: {e}")
 
