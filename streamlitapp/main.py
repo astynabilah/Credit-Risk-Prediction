@@ -116,52 +116,8 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Load Model
+# Load model
 PR = PredictRiskyLoan()
-
-# Descriptions
-descriptions = {
-    'emp_title': "Your current job title or role.",
-    'emp_length': "How long you’ve been working (in years).",
-    'annual_inc': "Your total annual income before tax.",
-    'addr_state': "The state where you currently live.",
-    'inq_last_6mths': "Number of times your credit report was checked in the past 6 months.",
-    'earliest_cr_line_year': "The year you first opened a credit line.",
-    'earliest_cr_line_month': "The month you first opened a credit line.",
-    'open_acc': "Total number of active credit accounts you currently have.",
-    'pub_rec': "Number of public financial records (e.g., bankruptcies).",
-    'delinq_2yrs': "How many times you've been over 30 days late on a payment in the past 2 years.",
-    'total_acc': "Total number of credit accounts you’ve had (open and closed).",
-    'revol_util': "Percentage of revolving credit you’re currently using.",
-    'revol_bal': "Your total outstanding balance on revolving credit (e.g., credit cards).",
-    'tot_cur_bal': "Total current balance across all accounts.",
-    'total_rev_hi_lim': "Combined maximum limit on all your revolving credit accounts.",
-    'grade': "Overall credit grade assigned to your loan.",
-    'sub_grade': "More detailed breakdown of your loan’s credit grade.",
-    'term': "Repayment term length in months (e.g., 36 or 60 months).",
-    'home_ownership': "Your current home ownership status (e.g., rent, own, mortgage).",
-    'purpose': "Reason for applying for the loan.",
-    'int_rate': "The interest rate you’ll pay on the loan.",
-    'dti': "Your debt-to-income ratio (monthly debt divided by monthly income).",
-    'installment': "Monthly payment amount you'll make for this loan.",
-    'issue_d_year': "The year the loan was issued.",
-    'issue_d_month': "The month the loan was issued.",
-    'initial_list_status': "Initial offering type of the loan (e.g., whole or fractional).",
-    'verification_status': "Whether your income was verified by the lender.",
-    'last_pymnt_year': "The year you made your most recent payment.",
-    'last_pymnt_month': "The month you made your most recent payment.",
-    'last_pymnt_amnt': "The amount you paid during your last payment.",
-    'recoveries': "Amount recovered after the loan was charged off.",
-    'collection_recovery_fee': "Fee charged for recovering a defaulted loan.",
-    'total_rec_prncp': "Total principal amount you've already paid back.",
-    'total_rec_int': "Total interest amount you've already paid.",
-    'total_rec_late_fee': "Total amount paid in late fees so far.",
-    'last_credit_pull_year': "The year when your credit was last checked.",
-    'last_credit_pull_month': "The month when your credit was last checked.",
-    'out_prncp': "Remaining loan principal that you still owe."
-}
-
 
 # Section structure
 sections = {
@@ -186,8 +142,7 @@ sections = {
     ]
 }
 
-form_input = {}
-
+# Categorical options
 categorical_options = {
     'term': ['36 months', '60 months'],
     'grade': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
@@ -234,6 +189,14 @@ categorical_options = {
     'initial_list_status': ['f', 'w']
 }
 
+# Tipe data
+dtype_map = {col: float for sec in sections.values() for col in sec}
+for col in categorical_options:
+    dtype_map[col] = str
+
+# Form input
+form_input = {}
+
 with st.form("prediction_form"):
     for section_name, columns in sections.items():
         st.subheader(section_name)
@@ -244,12 +207,10 @@ with st.form("prediction_form"):
 
             if col in categorical_options:
                 form_input[col] = st.selectbox(
-                    f"{label}",
-                    options=categorical_options[col],
-                    key=col
+                    f"{label}", options=categorical_options[col], key=col
                 )
             elif dtype_map[col] == float:
-                form_input[col] = st.text_input(f"{label}", key=col)
+                form_input[col] = st.text_input(f"{label}", "", key=col)
             else:
                 form_input[col] = st.text_input(f"{label}", "", key=col).strip().upper()
 
@@ -278,4 +239,3 @@ with st.form("prediction_form"):
                 st.success(f"Prediction Result: **{pred}**")
         except Exception as e:
             st.error(f"Prediction failed: {e}")
-
