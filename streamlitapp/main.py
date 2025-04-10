@@ -109,7 +109,7 @@ dtype_map = {
     'revol_bal': float, 'dti': float,
     'home_ownership': str, 'grade': str, 'initial_list_status': str, 'verification_status': str,
     'sub_grade': str, 'emp_length': str, 'term': str, 'addr_state': str,
-    'purpose': str, 'emp_title': str
+    'purpose': str, 'emp_title': str,'earliest_cr_line_year': float,
 }
 
 form_input = {}
