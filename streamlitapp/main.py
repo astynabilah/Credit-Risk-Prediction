@@ -98,13 +98,15 @@ st.markdown("""
         display: none;
     }
 </style>
-
 <script>
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-        e.preventDefault();
-        return false;
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input').forEach(el => {
+        el.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    });
 });
 </script>
 """, unsafe_allow_html=True)
@@ -176,9 +178,9 @@ with st.form("prediction_form"):
         label = col.replace('_', ' ').title()
         desc = descriptions.get(col, "No description available.")
         if dtype_map[col] == float:
-            form_input[col] = st.text_input(f"{label}", "")
+            form_input[col] = st.text_area(f"{col.replace('_', ' ').title()}", "", height=70)
         else:
-            form_input[col] = st.text_input(f"{label}", "").upper()
+            form_input[col] = st.text_area(f"{col.replace('_', ' ').title()}", "", height=70).upper()
         st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
