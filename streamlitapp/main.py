@@ -233,10 +233,53 @@ categorical_options = {
     'initial_list_status': ['f', 'w']
 }
 
-dtype_map = {key: str for sec in sections.values() for key in sec}
-for k in descriptions.keys():
-    if k not in dtype_map:
-        dtype_map[k] = float
+dtype_map = {
+    'recoveries': float,
+    'total_rec_prncp': float,
+    'collection_recovery_fee': float,
+    'last_pymnt_month': float,
+    'last_pymnt_amnt': float,
+    'last_pymnt_year': float,
+    'total_pymnt': float,
+    'total_pymnt_inv': float,
+    'out_prncp': float,
+    'out_prncp_inv': float,
+    'home_ownership': str,
+    'grade': str,
+    'initial_list_status': str,
+    'verification_status': str,
+    'int_rate': float,
+    'sub_grade': str,
+    'emp_length': str,
+    'term': str,
+    'total_rec_int': float,
+    'installment': float,
+    'last_credit_pull_year': float,
+    'last_credit_pull_month': float,
+    'total_rec_late_fee': float,
+    'issue_d_year': float,
+    'inq_last_6mths': float,
+    'loan_amnt': float,
+    'earliest_cr_line_month': float,
+    'issue_d_month': float,
+    'funded_amnt_inv': float,
+    'annual_inc': float,
+    'funded_amnt': float,
+    'addr_state': str,
+    'purpose': str,
+    'earliest_cr_line_year': float,
+    'tot_cur_bal': float,
+    'total_rev_hi_lim': float,
+    'open_acc': float,
+    'pub_rec': float,
+    'emp_title': str,
+    'delinq_2yrs': float,
+    'revol_util': float,
+    'total_acc': float,
+    'revol_bal': float,
+    'dti': float
+}
+
 
 form_input = {}
 
