@@ -60,8 +60,8 @@ class PredictRiskyLoan:
         sub_scaler.n_features_in_ = len(scalable_cols)
         sub_scaler.feature_names_in_ = np.array(scalable_cols)
 
-        scaled_array = sub_scaler.transform(df[scalable_cols].values)
-        df.loc[:, scalable_cols] = scaled_array
+        scaled_array = sub_scaler.transform(df[scalable_cols])
+        df[scalable_cols] = scaled_array.astype(float)
         df = df.apply(pd.to_numeric, errors='raise')
         return df
 
