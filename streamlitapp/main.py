@@ -167,11 +167,14 @@ form_input = {}
 
 with st.form("prediction_form"):
     for col in selected_columns:
+        label = col.replace("_", " ").title()
         desc = descriptions.get(col, "No description available.")
+        
         if dtype_map[col] == float:
-            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "")
+            form_input[col] = st.text_area(label, height=35)
         else:
-            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "").upper()
+            form_input[col] = st.text_area(label, height=35).upper()
+
         st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
