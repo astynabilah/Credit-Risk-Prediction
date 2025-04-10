@@ -266,24 +266,30 @@ with st.form("prediction_form"):
 
     submitted = st.form_submit_button("Predict")
 
-    if submitted:
-        try:
-            processed_input = {}
-            for col in dtype_map:
-                val = form_input[col].strip() if isinstance(form_input[col], str) else form_input[col]
-                if val == "":
-                    processed_input[col] = PR.imputation_values.get(col, np.nan)
-                else:
-                    try:
-                        processed_input[col] = float(val) if dtype_map[col] == float else val
-                    except Exception:
-                        processed_input[col] = PR.imputation_values.get(col, np.nan)
-
-            pred = PR.predict(processed_input)
-
-            if pred == "Risky Loan":
-                st.error(f"Prediction Result: **{pred}**")
+if submitted:
+    try:
+        processed_input = {}
+        for col in dtype_map:
+            val = form_input[col]
+            if isinstance(val, str):
+                val = val.strip()
+            if val == "":
+                processed_input[col] = PR.imputation_values.get(col, np.nan)
             else:
-                st.success(f"Prediction Result: **{pred}**")
-        except Exception as e:
-            st.error(f"Prediction failed: {e}")
+                try:
+                    if dtype_map[col] == float:
+                        processed_input[col] = float(val)
+                    else:
+                        processed_input[col] = val
+                except Exception:
+                    processed_input[col] = PR.imputation_values.get(col, np.nan)
+
+        pred = PR.predict(processed_input)
+
+        if pred == "Risky Loan":
+            st.error(f"Prediction Result: **{pred}**")
+        else:
+            st.success(f"Prediction Result: **{pred}**")
+
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
