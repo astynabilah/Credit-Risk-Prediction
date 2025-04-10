@@ -77,8 +77,28 @@ class PredictRiskyLoan:
 
 # === Streamlit App ===
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
-st.title("Loan Risk Prediction Form")
-st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
+st.markdown("""
+<h2 style='text-align: center;'>Loan Risk Prediction Form</h2>
+
+<p style='text-align: center; font-size: 16px;'>
+This form is part of a project-based internship for the Data Scientist at ID/X Partners.<br>
+Developed by <strong>Asty Nabilah 'Izzaturrahmah</strong>
+<a href="https://github.com/astynabilah/Credit-Risk-Prediction" target="_blank">View on GitHub</a>
+<a href="https://www.linkedin.com/in/asty-nabilah-izzaturrahmah/" target="_blank">Connect with me on Linkedin</a>
+</p>
+
+<hr style='margin-top: 10px; margin-bottom: 30px;'>s
+
+<div style='font-size:15px;'>
+<b>Instructions:</b>
+<ul>
+  <li>Please fill in all relevant fields before submitting to ensure accurate predictions.</li>
+  <li>Do not press <i>Enter</i> until all required fields have been filled in. Premature submission may lead to inaccurate results.</li>
+  <li>For categorical fields, use the dropdown or input options based on the provided examples.</li>
+  <li>If a field is not applicable or the information is unavailable, you may leave it blank.</li>
+</ul>
+</div>
+""", unsafe_allow_html=True)
 
 # Styling
 st.markdown("""
@@ -102,45 +122,46 @@ PR = PredictRiskyLoan()
 
 # Descriptions
 descriptions = {
-    'emp_title': "Job title provided by borrower.",
-    'emp_length': "Employment length in years (0 to 10+).",
-    'annual_inc': "Self-reported annual income.",
-    'addr_state': "US state provided by borrower in application.",
-    'inq_last_6mths': "Number of credit inquiries in past 6 months.",
-    'earliest_cr_line_year': "Year of borrower's earliest credit line.",
-    'earliest_cr_line_month': "Month of borrower's earliest credit line.",
-    'open_acc': "Number of open credit lines.",
-    'pub_rec': "Number of derogatory public records.",
-    'delinq_2yrs': "Number of 30+ days past-due incidents in last 2 years.",
-    'total_acc': "Total number of credit lines.",
-    'revol_util': "Revolving line utilization rate (% of credit used).",
-    'revol_bal': "Total credit revolving balance.",
-    'tot_cur_bal': "Total current balance of all accounts.",
-    'total_rev_hi_lim': "Total revolving high credit/limit.",
-    'grade': "Loan grade assigned by LendingClub.",
-    'sub_grade': "Loan subgrade assigned by LendingClub.",
-    'term': "The number of monthly payments (e.g., 36 or 60).",
-    'home_ownership': "Home ownership status: RENT, OWN, MORTGAGE, OTHER.",
-    'purpose': "Category for the loan request (e.g., debt_consolidation).",
-    'int_rate': "Interest rate of the loan.",
-    'dti': "Debt-to-income ratio.",
-    'installment': "Monthly payment owed by the borrower.",
-    'issue_d_year': "Year when the loan was funded.",
-    'issue_d_month': "Month the loan was issued.",
-    'initial_list_status': "Initial listing status: Whole, Fractional.",
-    'verification_status': "Indicates if income was verified by LC.",
-    'last_pymnt_year': "Year of the last payment received.",
-    'last_pymnt_month': "Month of the last payment received.",
-    'last_pymnt_amnt': "Last total payment amount received.",
-    'recoveries': "Indicates if a payment plan has been put in place for the loan.",
-    'collection_recovery_fee': "Post charge off collection fee.",
-    'total_rec_prncp': "Principal received to date.",
-    'total_rec_int': "Interest received to date.",
-    'total_rec_late_fee': "Late fees received to date.",
-    'last_credit_pull_year': "Year of the most recent credit pull.",
-    'last_credit_pull_month': "Month of the most recent credit pull.",
-    'out_prncp': "Remaining outstanding principal for total amount funded."
+    'emp_title': "Your current job title or role.",
+    'emp_length': "How long you’ve been working (in years).",
+    'annual_inc': "Your total annual income before tax.",
+    'addr_state': "The state where you currently live.",
+    'inq_last_6mths': "Number of times your credit report was checked in the past 6 months.",
+    'earliest_cr_line_year': "The year you first opened a credit line.",
+    'earliest_cr_line_month': "The month you first opened a credit line.",
+    'open_acc': "Total number of active credit accounts you currently have.",
+    'pub_rec': "Number of public financial records (e.g., bankruptcies).",
+    'delinq_2yrs': "How many times you've been over 30 days late on a payment in the past 2 years.",
+    'total_acc': "Total number of credit accounts you’ve had (open and closed).",
+    'revol_util': "Percentage of revolving credit you’re currently using.",
+    'revol_bal': "Your total outstanding balance on revolving credit (e.g., credit cards).",
+    'tot_cur_bal': "Total current balance across all accounts.",
+    'total_rev_hi_lim': "Combined maximum limit on all your revolving credit accounts.",
+    'grade': "Overall credit grade assigned to your loan.",
+    'sub_grade': "More detailed breakdown of your loan’s credit grade.",
+    'term': "Repayment term length in months (e.g., 36 or 60 months).",
+    'home_ownership': "Your current home ownership status (e.g., rent, own, mortgage).",
+    'purpose': "Reason for applying for the loan.",
+    'int_rate': "The interest rate you’ll pay on the loan.",
+    'dti': "Your debt-to-income ratio (monthly debt divided by monthly income).",
+    'installment': "Monthly payment amount you'll make for this loan.",
+    'issue_d_year': "The year the loan was issued.",
+    'issue_d_month': "The month the loan was issued.",
+    'initial_list_status': "Initial offering type of the loan (e.g., whole or fractional).",
+    'verification_status': "Whether your income was verified by the lender.",
+    'last_pymnt_year': "The year you made your most recent payment.",
+    'last_pymnt_month': "The month you made your most recent payment.",
+    'last_pymnt_amnt': "The amount you paid during your last payment.",
+    'recoveries': "Amount recovered after the loan was charged off.",
+    'collection_recovery_fee': "Fee charged for recovering a defaulted loan.",
+    'total_rec_prncp': "Total principal amount you've already paid back.",
+    'total_rec_int': "Total interest amount you've already paid.",
+    'total_rec_late_fee': "Total amount paid in late fees so far.",
+    'last_credit_pull_year': "The year when your credit was last checked.",
+    'last_credit_pull_month': "The month when your credit was last checked.",
+    'out_prncp': "Remaining loan principal that you still owe."
 }
+
 
 # Section structure
 sections = {
@@ -201,6 +222,10 @@ with st.form("prediction_form"):
                         processed_input[col] = PR.imputation_values.get(col, np.nan)
 
             pred = PR.predict(processed_input)
-            st.success(f"Prediction Result: **{pred}**")
+
+            if pred == "Risky Loan":
+                st.error(f"Prediction Result: **{pred}**")
+            else:
+                st.success(f"Prediction Result: **{pred}**")
         except Exception as e:
             st.error(f"Prediction failed: {e}")
