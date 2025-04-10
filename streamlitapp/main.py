@@ -75,14 +75,12 @@ class PredictRiskyLoan:
         prediction = self.model.predict(processed_data)[0]
         return "Risky Loan" if prediction == 0 else "Safe Loan"
 
-# ... semua import dan class PredictRiskyLoan tetap sama ...
-
 # --- Streamlit App ---
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
 st.title("Loan Risk Prediction Form")
 st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
 
-# Add minimal styling
+# Styling
 st.markdown("""
 <style>
     .form-text {
@@ -96,16 +94,27 @@ st.markdown("""
         padding: 8px 10px;
         font-size: 0.95rem;
     }
-    /* HIDE placeholder note */
     .stTextInput > div > div:has(span[aria-hidden="true"]) {
         display: none;
     }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input').forEach(el => {
+        el.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>
 """, unsafe_allow_html=True)
 
-
+# Init Class
 PR = PredictRiskyLoan()
 
+# Columns and Descriptions
 selected_columns = [
     'recoveries', 'total_rec_prncp', 'collection_recovery_fee', 'last_pymnt_month', 'last_pymnt_amnt',
     'last_pymnt_year', 'out_prncp', 'home_ownership', 'grade', 'initial_list_status',
@@ -166,28 +175,33 @@ form_input = {}
 
 with st.form("prediction_form"):
     for col in selected_columns:
+        label = col.replace('_', ' ').title()
         desc = descriptions.get(col, "No description available.")
         if dtype_map[col] == float:
-            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "")
+            form_input[col] = st.text_input(f"{label}", "")
         else:
-            form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "").upper()
+            form_input[col] = st.text_input(f"{label}", "").upper()
         st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
-
-    # Disable Enter key
-    st.markdown("""
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = window.parent.document.querySelector('form');
-        if (form) {
-            form.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                    e.preventDefault();
-                }
-            });
-        }
-    });
-    </script>
-    """, unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
 
+if submitted:
+    try:
+        processed_input = {}
+        for col in selected_columns:
+            val = form_input[col].strip()
+            if val == "":
+                processed_input[col] = PR.imputation_values.get(col, np.nan)
+            else:
+                try:
+                    if dtype_map[col] == float:
+                        processed_input[col] = float(val)
+                    else:
+                        processed_input[col] = val.upper()
+                except Exception:
+                    processed_input[col] = PR.imputation_values.get(col, np.nan)
+
+        pred = PR.predict(processed_input)
+        st.success(f"Prediction Result: **{pred}**")
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
