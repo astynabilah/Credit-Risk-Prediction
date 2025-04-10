@@ -78,8 +78,24 @@ class PredictRiskyLoan:
 # ... semua import dan class PredictRiskyLoan tetap sama ...
 
 # --- Streamlit App ---
+st.markdown("""
+<style>
+    .form-text {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: -10px;
+        margin-bottom: 15px;
+        display: block;
+    }
+    input[type="text"] {
+        padding: 8px 10px;
+        font-size: 0.95rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
-st.title("💰 Loan Risk Prediction Form")
+st.title("Loan Risk Prediction Form")
 st.markdown("Silakan isi form di bawah ini untuk memprediksi risiko pinjaman.")
 
 # Add minimal styling
@@ -153,12 +169,11 @@ form_input = {}
 with st.form("prediction_form"):
     for col in selected_columns:
         desc = descriptions.get(col, "No description available.")
-        st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
         if dtype_map[col] == float:
             form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "")
         else:
             form_input[col] = st.text_input(f"{col.replace('_', ' ').title()}", "").upper()
-        st.write("")  # Spacer biar nggak nempel input di bawahnya
+        st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
 
