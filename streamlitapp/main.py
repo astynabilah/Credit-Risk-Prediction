@@ -240,43 +240,6 @@ for k in descriptions.keys():
 
 form_input = {}
 
-# with st.form("prediction_form"):
-#     for section_name, columns in sections.items():
-#         st.subheader(section_name)
-#         st.markdown("---")
-#         for col in columns:
-#             label = col.replace('_', ' ').title()
-#             if dtype_map[col] == float:
-#                 form_input[col] = st.text_input(f"{label}", "")
-#             else:
-#                 form_input[col] = st.text_input(f"{label}", "").upper()
-#             desc = descriptions.get(col, "No description available.")
-#             st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
-
-#     submitted = st.form_submit_button("Predict")
-
-#     if submitted:
-#         try:
-#             processed_input = {}
-#             for col in dtype_map:
-#                 val = form_input[col].strip()
-#                 if val == "":
-#                     processed_input[col] = PR.imputation_values.get(col, np.nan)
-#                 else:
-#                     try:
-#                         processed_input[col] = float(val) if dtype_map[col] == float else val.upper()
-#                     except Exception:
-#                         processed_input[col] = PR.imputation_values.get(col, np.nan)
-
-#             pred = PR.predict(processed_input)
-
-#             if pred == "Risky Loan":
-#                 st.error(f"Prediction Result: **{pred}**")
-#             else:
-#                 st.success(f"Prediction Result: **{pred}**")
-#         except Exception as e:
-#             st.error(f"Prediction failed: {e}")
-
 with st.form("prediction_form"):
     for section_name, columns in sections.items():
         st.subheader(section_name)
