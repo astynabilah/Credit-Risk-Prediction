@@ -116,8 +116,52 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-# Load model
+
+# Load Model
 PR = PredictRiskyLoan()
+
+# Descriptions
+descriptions = {
+    'emp_title': "Your current job title or role.",
+    'emp_length': "How long you’ve been working (in years).",
+    'annual_inc': "Your total annual income before tax.",
+    'addr_state': "The state where you currently live.",
+    'inq_last_6mths': "Number of times your credit report was checked in the past 6 months.",
+    'earliest_cr_line_year': "The year you first opened a credit line.",
+    'earliest_cr_line_month': "The month you first opened a credit line.",
+    'open_acc': "Total number of active credit accounts you currently have.",
+    'pub_rec': "Number of public financial records (e.g., bankruptcies).",
+    'delinq_2yrs': "How many times you've been over 30 days late on a payment in the past 2 years.",
+    'total_acc': "Total number of credit accounts you’ve had (open and closed).",
+    'revol_util': "Percentage of revolving credit you’re currently using.",
+    'revol_bal': "Your total outstanding balance on revolving credit (e.g., credit cards).",
+    'tot_cur_bal': "Total current balance across all accounts.",
+    'total_rev_hi_lim': "Combined maximum limit on all your revolving credit accounts.",
+    'grade': "Overall credit grade assigned to your loan.",
+    'sub_grade': "More detailed breakdown of your loan’s credit grade.",
+    'term': "Repayment term length in months (e.g., 36 or 60 months).",
+    'home_ownership': "Your current home ownership status (e.g., rent, own, mortgage).",
+    'purpose': "Reason for applying for the loan.",
+    'int_rate': "The interest rate you’ll pay on the loan.",
+    'dti': "Your debt-to-income ratio (monthly debt divided by monthly income).",
+    'installment': "Monthly payment amount you'll make for this loan.",
+    'issue_d_year': "The year the loan was issued.",
+    'issue_d_month': "The month the loan was issued.",
+    'initial_list_status': "Initial offering type of the loan (e.g., whole or fractional).",
+    'verification_status': "Whether your income was verified by the lender.",
+    'last_pymnt_year': "The year you made your most recent payment.",
+    'last_pymnt_month': "The month you made your most recent payment.",
+    'last_pymnt_amnt': "The amount you paid during your last payment.",
+    'recoveries': "Amount recovered after the loan was charged off.",
+    'collection_recovery_fee': "Fee charged for recovering a defaulted loan.",
+    'total_rec_prncp': "Total principal amount you've already paid back.",
+    'total_rec_int': "Total interest amount you've already paid.",
+    'total_rec_late_fee': "Total amount paid in late fees so far.",
+    'last_credit_pull_year': "The year when your credit was last checked.",
+    'last_credit_pull_month': "The month when your credit was last checked.",
+    'out_prncp': "Remaining loan principal that you still owe."
+}
+
 
 # Section structure
 sections = {
@@ -142,59 +186,11 @@ sections = {
     ]
 }
 
-# Categorical options
-categorical_options = {
-    'term': ['36 months', '60 months'],
-    'grade': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
-    'sub_grade': ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5',
-                  'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5',
-                  'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5',
-                  'G1', 'G2', 'G3', 'G4', 'G5'],
-    'emp_title': ['Teacher', 'Manager', 'Registered Nurse', 'RN', 'Supervisor', 'Sales',
-                  'Project Manager', 'Owner', 'Office Manager', 'manager', 'Driver',
-                  'General Manager', 'Director', 'teacher', 'Engineer', 'driver',
-                  'Vice President', 'President', 'owner', 'Administrative Assistant',
-                  'Operations Manager', 'Attorney', 'Accountant', 'supervisor',
-                  'Police Officer', 'sales', 'Sales Manager', 'Account Manager',
-                  'Store Manager', 'Executive Assistant', 'truck driver', 'US Army',
-                  'Analyst', 'Technician', 'Nurse', 'Software Engineer', 'Truck Driver',
-                  'Assistant Manager', 'Paralegal', 'Controller', 'Program Manager',
-                  'Branch Manager', 'registered nurse', 'Consultant', 'Account Executive',
-                  'Administrator', 'Bank of America', 'Business Analyst', 'Principal',
-                  'Mechanic', 'Professor', 'Server', 'Executive Director', 'IT Manager',
-                  'mechanic', 'Electrician', 'Registered nurse', 'CEO',
-                  'Customer Service', 'Associate', 'AT&T', 'Foreman',
-                  'Director of Operations', 'Secretary', 'Financial Analyst',
-                  'Kaiser Permanente', 'Legal Assistant', 'District Manager', 'LPN',
-                  'USAF', 'USPS', 'Superintendent', 'Pharmacist', 'Physician', 'UPS',
-                  'Walmart', 'Financial Advisor', 'technician', 'Operator', 'nurse',
-                  'Social Worker', 'Accounting Manager', 'Instructor', 'Clerk', 'Officer',
-                  'MANAGER', 'Bookkeeper', 'machine operator', 'clerk', 'Machinist',
-                  'Firefighter', 'Maintenance', 'CNA', 'Service Manager', 'Wells Fargo',
-                  'Bartender', 'server', 'Truck driver', 'Legal Secretary',
-                  'IT Specialist', 'Others'],
-    'emp_length': ['< 1 year', '1 year', '2 years', '3 years', '4 years', '5 years',
-                   '6 years', '7 years', '8 years', '9 years', '10+ years'],
-    'home_ownership': ['RENT', 'OWN', 'MORTGAGE', 'OTHER', 'NONE', 'ANY'],
-    'verification_status': ['Verified', 'Source Verified', 'Not Verified'],
-    'purpose': ['credit_card', 'car', 'small_business', 'other', 'wedding',
-                'debt_consolidation', 'home_improvement', 'major_purchase',
-                'medical', 'moving', 'vacation', 'house', 'renewable_energy',
-                'educational'],
-    'addr_state': ['AZ', 'GA', 'IL', 'CA', 'OR', 'NC', 'TX', 'VA', 'MO', 'CT',
-                   'UT', 'FL', 'NY', 'PA', 'MN', 'NJ', 'KY', 'OH', 'SC', 'RI',
-                   'LA', 'MA', 'WA', 'WI', 'AL', 'CO', 'KS', 'NV', 'AK', 'MD',
-                   'WV', 'VT', 'MI', 'DC', 'SD', 'NH', 'AR', 'NM', 'MT', 'HI',
-                   'WY', 'OK', 'DE', 'MS', 'TN', 'IA', 'NE', 'ID', 'IN', 'ME'],
-    'initial_list_status': ['f', 'w']
-}
+dtype_map = {key: str for sec in sections.values() for key in sec}
+for k in descriptions.keys():
+    if k not in dtype_map:
+        dtype_map[k] = float
 
-# Tipe data
-dtype_map = {col: float for sec in sections.values() for col in sec}
-for col in categorical_options:
-    dtype_map[col] = str
-
-# Form input
 form_input = {}
 
 with st.form("prediction_form"):
@@ -203,17 +199,11 @@ with st.form("prediction_form"):
         st.markdown("---")
         for col in columns:
             label = col.replace('_', ' ').title()
-            desc = descriptions.get(col, "No description available.")
-
-            if col in categorical_options:
-                form_input[col] = st.selectbox(
-                    f"{label}", options=categorical_options[col], key=col
-                )
-            elif dtype_map[col] == float:
-                form_input[col] = st.text_input(f"{label}", "", key=col)
+            if dtype_map[col] == float:
+                form_input[col] = st.text_input(f"{label}", "")
             else:
-                form_input[col] = st.text_input(f"{label}", "", key=col).strip().upper()
-
+                form_input[col] = st.text_input(f"{label}", "").upper()
+            desc = descriptions.get(col, "No description available.")
             st.markdown(f"<span class='form-text'>{desc}</span>", unsafe_allow_html=True)
 
     submitted = st.form_submit_button("Predict")
@@ -222,12 +212,12 @@ with st.form("prediction_form"):
         try:
             processed_input = {}
             for col in dtype_map:
-                val = form_input[col].strip() if isinstance(form_input[col], str) else form_input[col]
+                val = form_input[col].strip()
                 if val == "":
                     processed_input[col] = PR.imputation_values.get(col, np.nan)
                 else:
                     try:
-                        processed_input[col] = float(val) if dtype_map[col] == float else val
+                        processed_input[col] = float(val) if dtype_map[col] == float else val.upper()
                     except Exception:
                         processed_input[col] = PR.imputation_values.get(col, np.nan)
 
