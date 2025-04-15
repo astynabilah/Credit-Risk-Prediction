@@ -315,6 +315,19 @@ if submitted:
             'revol_util', 'total_acc', 'revol_bal', 'dti'
         ]
 
+        # Display and download unordered inputs
+        unordered_df = pd.DataFrame(list(form_input.items()), columns=['Label/Description', 'Value'])
+        unordered_df['Label/Description'] = unordered_df['Label/Description'].map(descriptions)
+        st.subheader("Unordered Input Values")
+        st.dataframe(unordered_df)
+        unordered_csv = unordered_df.to_csv(index=False)
+        st.download_button(
+            label="Download Unordered Inputs as CSV",
+            data=unordered_csv,
+            file_name="unordered_inputs.csv",
+            mime="text/csv"
+        )
+
         processed_input = {}
         for col in ordered_columns:
             val = form_input.get(col)
@@ -327,7 +340,22 @@ if submitted:
                     processed_input[col] = float(val) if dtype_map[col] == float else val
                 except Exception:
                     processed_input[col] = PR.imputation_values.get(col, np.nan)
+        
+        # Display and download ordered inputs
+        ordered_df = pd.DataFrame(list(processed_input.items()), columns=['Label/Description', 'Value'])
+        ordered_df['Label/Description'] = ordered_df['Label/Description'].map(descriptions)
+        st.subheader("Ordered Input Values")
+        st.dataframe(ordered_df)
+        ordered_csv = ordered_df.to_csv(index=False)
+        st.download_button(
+            label="Download Ordered Inputs as CSV",
+            data=ordered_csv,
+            file_name="ordered_inputs.csv",
+            mime="text/csv"
+        )
 
+        
+        # Prediction
         pred = PR.predict(processed_input)
 
         if pred == "Risky Loan":
