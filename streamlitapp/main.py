@@ -73,7 +73,7 @@ class PredictRiskyLoan:
         expected_cols = self.model.get_booster().feature_names
         processed_data = processed_data[expected_cols]
         prediction = self.model.predict(processed_data)[0]
-        return "Risky Loan" if prediction == 0 else "Safe Loan"
+        return "Risky Loan" if prediction == 1 else "Safe Loan"
 
 # === Streamlit App ===
 st.set_page_config(page_title="Loan Risk Prediction", layout="wide")
